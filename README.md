@@ -3,7 +3,7 @@ If have been working more than ten years as subcontractor in places where nothin
 
 I am recoding in GO "bee", a tool I developped ten years ago in oder to empower enginners.
 Engineers are able to check theirs platform. They know what to do or what to run in order to say if yes or no, a system is working good.
-So why is it always so complex to deal with monitoring ? Why spend so much money ?
+So why is it always so complex to deal with monitoring ?
 
 The idea with bee is to tell all people "well run the check/the job you want, run it where you want, just tell me result using this rest API"
 
