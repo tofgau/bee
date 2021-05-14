@@ -13,5 +13,5 @@ Bee will provide
 * a mangement of "flapping" - we we get ok, not ok ,ok , not ok ...
 * simple integration with your alarming system
 
-Visit the wiki for the details
+*Visit the wiki for the details*
 < UNDER CONSTRUCTION >
