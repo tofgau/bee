@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"time"
@@ -69,54 +68,56 @@ func main() {
 
 func play() {
 
-	//play **********************************************************************
+	/*
+		//play **********************************************************************
 
-	var x = &beeObj{UID: "MYSELF", AuthKey: "AZZEERT"}
-	x.AddNotification("coucou")
-	x.AddNotification("caca")
+		var x = &beeObj{UID: "MYSELF", AuthKey: "AZZEERT"}
+		x.AddNotification("coucou")
+		x.AddNotification("caca")
 
-	Info.Println(x)
-	fmt.Println(x)
-	var marshal, err = x.marshal()
-	fmt.Println(marshal)
-	_ = err
-	fmt.Println("Do a storage request now..")
-	fmt.Println(x)
-	ce := make(chan error)
-	chanStore <- storeQuery{x, ce}
-	fmt.Println("End of storage request")
-	fmt.Println(x)
-
-	{
-		fmt.Println("Do a load  request now..")
+		Info.Println(x)
+		fmt.Println(x)
+		var marshal, err = x.marshal()
+		fmt.Println(marshal)
+		_ = err
+		fmt.Println("Do a storage request now..")
+		fmt.Println(x)
 		ce := make(chan error)
-		cr := make(chan beeObj)
-		chanLoad <- loadQuery{"myself", cr, ce}
-		select {
-		case err := <-ce:
-			fmt.Printf("Error loading : %s", err)
-			break
-		case obj := <-cr:
-			fmt.Printf("Obj loaded :  %s", obj)
-			break
+		chanStore <- storeQuery{x, ce}
+		fmt.Println("End of storage request")
+		fmt.Println(x)
+
+		{
+			fmt.Println("Do a load  request now..")
+			ce := make(chan error)
+			cr := make(chan *beeObj)
+			chanLoad <- loadQuery{"myself", cr, ce}
+			select {
+			case err := <-ce:
+				fmt.Printf("Error loading : %s", err)
+				break
+			case obj := <-cr:
+				fmt.Printf("Obj loaded :  %s", obj)
+				break
+			}
+
+			fmt.Println("End of load request")
 		}
 
-		fmt.Println("End of load request")
-	}
+		Info.Println("Do a list request")
+		cs := make(chan string)
+		chanList <- cs
+		for file := range cs {
+			Info.Printf(" list request received %s", file)
+		}
 
-	Info.Println("Do a list request")
-	cs := make(chan string)
-	chanList <- cs
-	for file := range cs {
-		Info.Printf(" list request received %s", file)
-	}
+		Info.Print("End of list request")
 
-	Info.Print("End of list request")
+		var z beeObj
 
-	var z beeObj
+		err = json.Unmarshal([]byte(marshal), &z)
 
-	err = json.Unmarshal([]byte(marshal), &z)
-
-	fmt.Println(z)
+		fmt.Println(z)
+	*/
 
 }

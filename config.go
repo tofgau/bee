@@ -26,6 +26,7 @@ type Config struct {
 	LogMaxSize        int    `json:"LogMaxSize"`
 	LogMaxAge         int    `json:"LogMaxAge"`
 	LogMaxBackups     int    `json:"LogMaxBackups"`
+	RewriteUIDCase    string `json:"RewriteUIDCase"`
 }
 
 func LoadConfiguration(file string) Config {

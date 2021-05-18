@@ -6,7 +6,13 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"time"
 )
+
+//
+// TO DO : should lock a record after a read (=checkout) and un lock it (=checkin) after a write.
+//    NOt a major issue because should not have concurrent issue except with GUI
+//
 
 //
 // Take a bee Object and return the marshalled JSON string
@@ -32,7 +38,7 @@ func unMarshal(in []byte) (beeObj, error) {
 
 type loadQuery struct {
 	UID     string
-	chanRet chan beeObj
+	chanRet chan *beeObj
 	err     chan error
 }
 
@@ -51,16 +57,28 @@ func (C Config) setupStorage() (chanLoad chan loadQuery, chanStore chan storeQue
 		Trace.Println("Starting abstraction storage")
 		for {
 			select {
+			//
+			// Load
+			//
 			case loadQuery := <-chanLoad:
 				Trace.Printf("Store:: Load of %s", loadQuery.UID)
+
+				if _, err := os.Stat(C.BeeObjectPath + "/" + loadQuery.UID); os.IsNotExist(err) {
+					Info.Printf("Store:: %s do not exist. Return new beeObj", loadQuery.UID)
+					ret := beeObj{UID: loadQuery.UID, XcreationTime: time.Now(), XS_lastState: "DS", S_currentState: "DS"}
+					ret.AddNotification("this job is born in the Hive")
+					loadQuery.chanRet <- &ret
+					break
+				}
+
 				jsonFile, err := os.Open(C.BeeObjectPath + "/" + loadQuery.UID)
-				defer jsonFile.Close()
+
 				if err != nil {
 					loadQuery.err <- errors.New(fmt.Sprintf("Store::Error opening  %s : %s", loadQuery.UID, err))
 					break
-
 				}
 				byteValue, _ := ioutil.ReadAll(jsonFile)
+				jsonFile.Close()
 
 				var beeObjRet = beeObj{}
 				err = json.Unmarshal(byteValue, &beeObjRet)
@@ -69,8 +87,12 @@ func (C Config) setupStorage() (chanLoad chan loadQuery, chanStore chan storeQue
 					break
 
 				}
-				loadQuery.chanRet <- beeObjRet
+				loadQuery.chanRet <- &beeObjRet
 				break
+
+				//
+				//Store
+				//
 			case storeQuery := <-chanStore:
 				Trace.Printf("Store:: request storage of %s", storeQuery.beeObj)
 				var marshall, err = storeQuery.beeObj.marshal()
@@ -84,8 +106,13 @@ func (C Config) setupStorage() (chanLoad chan loadQuery, chanStore chan storeQue
 					storeQuery.err <- errors.New(fmt.Sprintf("Store::Error writing beeobj %s disk full or unauthorized char (%s)", storeQuery.beeObj, err))
 					break
 				}
+
 				close(storeQuery.err)
 				break
+
+				//
+				//List
+				//
 
 			case chanPathString := <-chanList:
 				go func(C Config, chanPathString chan<- string) {
