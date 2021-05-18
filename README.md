@@ -1,4 +1,4 @@
-# bee - A simple - monolitic & autonomous - system to monitor and alarms what you want. JUst upload an HTTP state
+# bee - A simple - monolitic & autonomous - system to monitor, keep tracks and alarms what you want. Just upload an HTTPx state.
 If have been working more than ten years as subcontractor in places where nothing is working easily.
 
 I am recoding in GO "bee", a tool I developped ten years ago in oder to empower enginners.
