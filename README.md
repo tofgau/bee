@@ -15,17 +15,24 @@ Bee will provide
 
 **Visit the wiki for the details**
 
-#How to send a state with powershell#  
+# How to send a state with powershell
 Example here use http, https need a valid ssl certificate but works the same way (or try to alter the invoke-webrequest command to skip it but this is really not recommanded)
 
 $Parameters = @{
+
   UID = 'TEST.test'
   AuthKey='Whatever you want the first time, the same after'
+  
   DOC_revision='2.1'
+  
   S_currentState='OK'
+  
   RunningPath=get-location
+  
   RunningLocation=hostname
 }
+
  Invoke-WebRequest -Uri 'http://<ip:port>/update' -Body $Parameters -Method Post
+ 
  
 < UNDER CONSTRUCTION >
